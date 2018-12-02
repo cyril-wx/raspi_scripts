@@ -1,0 +1,25 @@
+#!/bin/bash
+# -- /etc/rc.d/rc.local --
+# THIS FILE IS ADDED FOR COMPATIBILITY PURPOSES
+#
+# It is highly advisable to create own systemd services or udev rules
+# to run scripts during boot instead of using this file.
+#
+# In contrast to previous versions due to parallel execution during boot
+# this script will NOT be run after all other services.
+#
+# Please note that you must run 'chmod +x /etc/rc.d/rc.local' to ensure
+# that this script will be executed during boot.
+
+touch /var/lock/subsys/local
+
+ip link set wlan0 up
+systemctl stop NetworkManager
+wpa_supplicant -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf&
+dhclient wlan0
+
+sleep 2 # 设置以防网络还未启动就继续运行auto-run
+
+/root/auto-run.sh &  # 加上‘&’后台运行脚本，以防此脚本出现异常影响开机进程。
+#/usr/sbin/phddns start
+#/root/send-ip-mail.sh
