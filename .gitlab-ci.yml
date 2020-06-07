@@ -1,0 +1,46 @@
+# Task 默认使用shell执行
+# - build
+# - update
+# - deploy
+
+# 环境变量 (会自动注入到 Task 运行的 shell 环境中)
+variables: 
+    CI_REPOSITORY_NAME: git.com/${CI_PROJECT_PATH}
+    CI_ROOTDIR: "build"
+
+stages:
+    - build
+    - test
+    - deploy
+
+build_self:
+    stage: build
+    script:
+        - cd /home && git clone http://gitlab.chinared.xyz/cyril/raspi_centos_script.git
+        - cd raspi_centos_script/ 
+        - bash envs/centos_environment_config.sh
+        - bash system/centos_system_config.sh
+    only:
+        - master
+    tags:
+        - slave-centos8-runner
+
+test_self:
+    statge: test
+    script:
+        - echo "test 1"
+        - echo "test 2"
+    only:
+        - master
+    tags:
+        - slave-centos8-runner
+
+deploy_self:
+    stage: deploy
+    script:
+        - echo "deploy done"
+    only:
+        - master
+    tags:
+        - slave-centos8-runner 
+
