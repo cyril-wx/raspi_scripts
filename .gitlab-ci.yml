@@ -17,7 +17,7 @@ build_self:
     stage: build
     script:
         - echo "$(whoami)"
-        - rm -rf /home/raspi_centos_script
+        - sudo rm -rf /home/raspi_centos_script
         - git clone http://cyril:Cyril2019@gitlab.chinared.xyz/cyril/raspi_centos_script.git /home/raspi_centos_script
         - cd /home/raspi_centos_script/
         - bash envs/centos_environment_config.sh
