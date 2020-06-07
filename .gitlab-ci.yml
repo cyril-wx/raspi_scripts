@@ -26,7 +26,7 @@ build_self:
         - slave-centos8-runner
 
 test_self:
-    statge: test
+    stage: test
     script:
         - echo "test 1"
         - echo "test 2"
