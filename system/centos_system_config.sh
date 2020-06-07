@@ -3,14 +3,14 @@ set -ex
 
 ##source ./../envs/centos_environment_config.sh
 
-
-###Carefully, do not add "yum versionlock clean" if you don't known what you do.####
 set +e
-yum versionlock clean
+# yum -y install yum-plugin-versionlock centos7
+###Carefully, do not add "yum versionlock clean" if you don't known what you do.####
+# yum versionlock clean # centos7
 
 which -v
 if [ $? -ne 0 ];then
-        yum -y install which
+	yum -y install which
 fi
 which sudo
 if [ $? -ne 0 ];then

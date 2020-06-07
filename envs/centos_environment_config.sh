@@ -22,7 +22,7 @@ case "${ID}${VERSION_ID}" in
     if [ ! -f "/etc/yum.repos.d/CentOS-Base.repo.bak" ];then
         mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak
     fi
-    curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-8.repo
+    curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
     yum clean all
     yum makecache
 ;;

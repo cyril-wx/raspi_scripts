@@ -17,11 +17,11 @@ build_self:
     stage: build
     script:
         - echo "$(whoami)"
-        - sudo rm -rf /home/raspi_centos_script
-        - sudo git clone http://cyril:Cyril2019@gitlab.chinared.xyz/cyril/raspi_centos_script.git /home/raspi_centos_script
+        - rm -rf /home/raspi_centos_script
+        - git clone http://cyril:Cyril2019@gitlab.chinared.xyz/cyril/raspi_centos_script.git /home/raspi_centos_script
         - cd /home/raspi_centos_script/
-        - sudo bash envs/centos_environment_config.sh
-        - sudo bash system/centos_system_config.sh
+        - bash envs/centos_environment_config.sh
+        - bash system/centos_system_config.sh
     only:
         - master
     tags:
