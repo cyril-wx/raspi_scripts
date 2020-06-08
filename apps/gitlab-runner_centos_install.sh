@@ -11,7 +11,7 @@ yum versionlock clean
 
 which -v
 if [ $? -ne 0 ];then
-        yum -y install which
+    yum -y install which
 fi
 which wget
 if [ $? -ne 0 ];then
