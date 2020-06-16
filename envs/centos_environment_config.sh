@@ -29,10 +29,12 @@ function update_repo()
 {
 case "${ID}${VERSION_ID}" in
 "centos7")
-    if [ ! -f "/etc/yum.repos.d/CentOS-Base.repo.bak" ];then
-        mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak
+    if [ ! -d "/etc/yum.repos.d/bak" ];then
+        set +e
+        mkdir -p /etc/yum.repos.d/bak
+        mv *.repo /etc/yum.repos.d/bak/
+        set -e
     fi
-
     if [ x"${ARCHITECTURE}"~=$"armv7l" ];then
         ## 适用于树莓派
         curl -o /etc/yum.repos.d/CentOS-Base.repo http://h5ai.chinared.xyz/repository/centos/arm/CentOS-Base.repo
@@ -44,21 +46,16 @@ case "${ID}${VERSION_ID}" in
     yum makecache
 ;;
 "centos8")
-    if [ ! -f "/etc/yum.repos.d/CentOS-AppStream.repo.bak" ];then
-        mv /etc/yum.repos.d/CentOS-AppStream.repo /etc/yum.repos.d/CentOS-AppStream.repo.bak
+    if [ ! -d "/etc/yum.repos.d/bak" ];then
+        set +e
+        mkdir -p /etc/yum.repos.d/bak
+        mv *.repo /etc/yum.repos.d/bak/
+        set -e
     fi
-    if [ ! -f "/etc/yum.repos.d/CentOS-Base.repo.bak" ];then
-        mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak
-    fi
-    if [ ! -f "/etc/yum.repos.d/CentOS-Epel.repo.bak" ];then
-        mv /etc/yum.repos.d/CentOS-Epel.repo /etc/yum.repos.d/CentOS-Epel.repo.bak
-    fi
-    if [ ! -f "/etc/yum.repos.d/CentOS-Media.repo.bak" ];then
-        mv /etc/yum.repos.d/CentOS-Media.repo /etc/yum.repos.d/CentOS-Media.repo.bak
-    fi
-   
     if [ x"${ARCHITECTURE}"~=$"x86_64" ];then
         curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-8.repo
+    else
+        echo "Unsupported architecture: ${ARCHITECTURE}"
     fi
     yum clean all
     yum makecache
