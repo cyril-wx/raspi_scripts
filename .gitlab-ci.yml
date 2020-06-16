@@ -7,6 +7,8 @@
 variables: 
     CI_REPOSITORY_NAME: git.com/${CI_PROJECT_PATH}
     CI_ROOTDIR: "build"
+    GIT_USER: ${GIT_USER}
+    GIT_PASSPWORD: ${GIT_PASSPWORD}
 
 stages:
     - build
@@ -17,9 +19,9 @@ build_self:
     stage: build
     script:
         # - echo "$(whoami)"
-        - sudo rm -rf /home/raspi_centos_script
-        - sudo git clone http://cyril:Cyril2019@gitlab.chinared.xyz/cyril/raspi_centos_script.git /home/raspi_centos_script
-        - cd /home/raspi_centos_script/
+        - sudo rm -rf /home/raspi_scripts
+        - sudo git clone http://${GIT_USER}:${GIT_PASSPWORD}@gitlab.chinared.xyz/cyril/raspi_scripts.git /home/raspi_script
+        - cd /home/raspi_scripts/
         - sudo bash -e envs/centos_environment_config.sh
         - sudo bash -e system/centos_system_config.sh
     only:
