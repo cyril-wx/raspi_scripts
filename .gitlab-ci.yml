@@ -20,7 +20,7 @@ build_self:
     script:
         # - echo "$(whoami)"
         - sudo rm -rf /home/raspi_scripts
-        - sudo git clone http://${GIT_USER}:${GIT_PASSPWORD}@gitlab.chinared.xyz/cyril/raspi_scripts.git /home/raspi_script
+        - sudo git clone http://${GIT_USER}:${GIT_PASSPWORD}@gitlab.chinared.xyz/cyril/raspi_scripts.git /home/raspi_scripts
         - cd /home/raspi_scripts/
         - sudo bash -e envs/centos_environment_config.sh
         - sudo bash -e system/centos_system_config.sh
