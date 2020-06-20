@@ -7,9 +7,13 @@
 # 1. centos7
 # 2. centos8
 # 3. raspbian
+#----------------------------------------
+# @author : Cyril
+# @email  : wyy377244@163.com
+# @create : 2020-06-19 23:40:25
 ##########################################
 
-echo "centos_environment_config"
+echo ">>> centos_environment_config <<<"
 ###########################################
 ###@Constant 系统环境变量
 # 1. ID
