@@ -13,8 +13,8 @@ sys.setdefaultencoding('utf8')
 session = requests.session()
 # 手动获取csrf， cookie
 cookie = {
-        "acw_tc": "2f5bc38c15936077807328920e79c6f9971f3cfd31ff14931afdc842de",
-        "PHPSESSID": "tjhbk084t44o4im7sgoppdk544",
+        "acw_tc": "2f5bc38f15936229203525511e9b123ee3d18a8e83f83e65f1a242523e",
+        "PHPSESSID": "a18pjus18gcnoko32feg13ne7t",
         "_ga": "GA1.2.876813571.1587480806",
         "_gid": "GA1.2.1249088767.1593607783",
         "_gat_gtag_UA_156685489_1": "1",
@@ -22,7 +22,7 @@ cookie = {
 node = "21"  # 日本东京
 #node = "37"  # 新加坡CN2-2
 #node = "24"  # 新加坡CN2
-csrf = "e189d8eeb1ca224b45f6aabbc1ae38ce" # 无需修改
+csrf = "04b613a96ac9881b6149852be97dbee5"
 
 def createProxy(node="12", proxy_name="", proxy_type="http", local_ip="127.0.0.1", local_port="80", remote_port="", domain="", cookie={}):
     data = {
@@ -41,6 +41,7 @@ def createProxy(node="12", proxy_name="", proxy_type="http", local_ip="127.0.0.1
         "sk": "",
     }
 
+
     headers = {
         "authority": "www.natfrp.com",
         "method": "POST",
@@ -51,12 +52,6 @@ def createProxy(node="12", proxy_name="", proxy_type="http", local_ip="127.0.0.1
         "accept-language": "zh-CN,zh;q=0.9,en;q=0.8",
         "content-length": "215",
         "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-        "cookie": "acw_tc={}; PHPSESSID={}; _ga={}; _gid={}; _gat_gtag_UA_156685489_1={}".format(
-            cookie["acw_tc"],
-            cookie["PHPSESSID"],
-            cookie["_ga"],
-            cookie["_gid"],
-            cookie["_gat_gtag_UA_156685489_1"],),
         "dnt": "1",
         "origin": "https://www.natfrp.com",
         "referer": "https://www.natfrp.com/?page=panel&module=addproxy",
@@ -68,7 +63,7 @@ def createProxy(node="12", proxy_name="", proxy_type="http", local_ip="127.0.0.1
 
 
     url = "https://www.natfrp.com{}".format(headers["path"])
-    res = session.post(url, cookies=cookie, headers=headers, data=data)
+    res = session.post(url, cookies=cookie, headers=headers, data=data) ## headers 中若有cookie会覆盖传入cookie
     print ("=================[{}]==================".format(proxy_name))
     print ("Response:{}".format(res.text.encode()))
     time.sleep(1)
@@ -89,8 +84,8 @@ def createProxies():
                         remote_port="", domain="gitlab.chinared.xyz", cookie=cookie),
         createProxy(node=node, proxy_name="Code", proxy_type="http", local_ip="127.0.0.1", local_port="8100",
                         remote_port="", domain="code.chinared.xyz", cookie=cookie),
-        createProxy(node=node, proxy_name="Liaoliao", proxy_type="http", local_ip="127.0.0.1", local_port="80",
-                        remote_port="", domain="ll.chinared.xyz", cookie=cookie),
+        #createProxy(node=node, proxy_name="Liaoliao", proxy_type="http", local_ip="127.0.0.1", local_port="80",
+        #                remote_port="", domain="ll.chinared.xyz", cookie=cookie),
         createProxy(node=node, proxy_name="SQLAdmin", proxy_type="http", local_ip="127.0.0.1", local_port="888",
                         remote_port="", domain="sqladmin.chinared.xyz", cookie=cookie),
         createProxy(node=node, proxy_name="H5ai", proxy_type="http", local_ip="127.0.0.1", local_port="80",
@@ -99,8 +94,10 @@ def createProxies():
                         remote_port="", domain="pi.chinared.xyz", cookie=cookie),
         createProxy(node=node, proxy_name="SQL", proxy_type="tcp", local_ip="127.0.0.1", local_port="3306",
                         remote_port="11667", domain="", cookie=cookie),
-        #createProxy(node=node, proxy_name="MySSH", proxy_type="tcp", local_ip="127.0.0.1", local_port="12580",
-        #            remote_port="12581", domain="", cookie=cookie),
+        createProxy(node=node, proxy_name="MySSH", proxy_type="tcp", local_ip="127.0.0.1", local_port="12580",
+                    remote_port="12581", domain="", cookie=cookie),
+        createProxy(node=node, proxy_name="Dashboard", proxy_type="http", local_ip="127.0.0.1", local_port="9090",
+                    remote_port="", domain="dash.chinared.xyz", cookie=cookie),
     ]
     print ("Error count: {}F/{}".format(len([i for i in result if i == False]), len(result)))
 
@@ -121,11 +118,6 @@ def getProxyIds():
         "accept-language": "zh-Hans-CN, zh-Hans; q=0.5",
         "content-length": "215",
         "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-        "cookie": "acw_tc={}; PHPSESSID={}; _ga={}; _gid={}; _gat_gtag_UA_156685489_1={}".format(cookie["acw_tc"],
-                                                                                                 cookie["PHPSESSID"],
-                                                                                                 cookie["_ga"],
-                                                                                                 cookie["_gid"],
-                                                                                                 cookie["_gat_gtag_UA_156685489_1"], ),
         "dnt": "1",
         "origin": "https://www.natfrp.com",
         "referer": "https://www.natfrp.com/?page=panel&module=proxies",
@@ -138,7 +130,7 @@ def getProxyIds():
         'module':'proxies',
         'page':'panel'
     }
-    res = requests.get(url, cookies=cookie, headers=headers, data=data)
+    res = session.get(url, cookies=cookie, headers=headers, data=data)
 
     html = etree.HTML(res.text)  # 初始化生成一个XPath解析对象
     #result = etree.tostring(html, encoding='utf-8')  # 解析对象输出代码
@@ -167,11 +159,6 @@ def deleteProxiesById(id_names={}):
         "accept-language": "zh-Hans-CN, zh-Hans; q=0.5",
         "content-length": "215",
         "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-        "cookie": "acw_tc={}; PHPSESSID={}; _ga={}; _gid={}; _gat_gtag_UA_156685489_1={}".format(cookie["acw_tc"],
-                                                                                                 cookie["PHPSESSID"],
-                                                                                                 cookie["_ga"],
-                                                                                                 cookie["_gid"], cookie[
-                                                                                                     "_gat_gtag_UA_156685489_1"], ),
         "dnt": "1",
         "origin": "https://www.natfrp.com",
         "referer": "https://www.natfrp.com/?page=panel&module=proxies",
@@ -190,15 +177,51 @@ def deleteProxiesById(id_names={}):
         }
         _url = url + "&delete={}&csrf={}".format(i, csrf)
         headers["path"] = headers["path"] + "&delete={}&csrf={}".format(i, csrf)
-        res = requests.get(_url, cookies=cookie, headers=headers, data=data)
+        res = session.get(_url, cookies=cookie, headers=headers, data=data)
         print ("删除隧道：{}. Response: {}".format(id_names[i], res.text))
         time.sleep(1)
 
 
+def downloadConfFromFrp():
+    """
+    # 从frp服务器下载ini文件
+    :return: ini path
+    """
+    url = "https://www.natfrp.com/?page=panel&module=configuration&server={}".format(node)
+
+    headers = {
+    "authority": "www.natfrp.com",
+    "method": "GET",
+    "path": "/?page=panel&module=configuration&server={}".format(node),
+    "scheme": "https",
+    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+    "accept-encoding": "gzip, deflate, br",
+    "accept-language": "zh-CN,zh;q=0.9,en;q=0.8",
+    "dnt": "1",
+    "referer": "https://www.natfrp.com/?page=panel&module=configuration",
+    "sec-fetch-mode": "navigate",
+    "sec-fetch-site": "same-origin",
+    "sec-fetch-user": "?1",
+    "upgrade-insecure-requests": "1",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36"""
+    }
+
+    res = session.get(url, cookies=cookie, headers=headers)
+
+    html = etree.HTML(res.text)  # 初始化生成一个XPath解析对象
+    # result = etree.tostring(html, encoding='utf-8')  # 解析对象输出代码
+    tbody = html.xpath("//html/body/div[1]/div[1]/div[2]/div/div/div[1]/div[2]/div[2]/pre/text()")  # 解析tbody-tr-td下元素，使用text()获取值
+    with open("/home/frpc.ini", "w") as f:
+        f.write(tbody[0])
+    return "/home/frpc.ini"
+
 if __name__ == "__main__":
+
+    #pIds = getProxyIds()
+    #deleteProxiesById(pIds)
     #createProxies()
-    pIds = getProxyIds()
-    deleteProxiesById(pIds)
+    downloadConfFromFrp()
     pass
 
 
+#/html/body/div[1]/div[1]/div[2]/div/div/div[1]/div[2]/div[2]/pre
