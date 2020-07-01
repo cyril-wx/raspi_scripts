@@ -8,7 +8,7 @@ set -o pipefail
 #   path   : 当前运行脚本绝对路径
 # <<<<<
 
-
+user=pi
 ########################################
 # 安装natfrp(树莓派专用32/64位)
 #--------------------------------------
@@ -21,6 +21,9 @@ set -o pipefail
 ########################################
 
 echo "Start Install NatFrp..."
+
+cd /home/${user}
+
 set +e
 ARCHITECTURE=""
 uname -a | grep "aarch64"
@@ -28,14 +31,14 @@ if [ $? -eq 0 ];then
     wget --timeout 120 --tries 2 -O frpc_linux_arm64  https://qianqu.me/frp/frpc_linux_arm64
     ARCHITECTURE="aarch64"
     sudo chmod 777 frpc_linux_arm64
-    nohup frpc_linux_arm64 -c /home/frpc.ini &
+    nohup ./frpc_linux_arm64 -c /home/frpc.ini &
 fi
 uname -a | grep "armhf"
 if [ $? -eq 0 ];then
     wget --timeout 120 --tries 2 -O frpc_linux_arm  https://qianqu.me/frp/frpc_linux_arm
     ARCHITECTURE="armhf"
     sudo chmod 777 frpc_linux_arm
-    nohup frpc_linux_arm -c /home/frpc.ini &
+    nohup ./frpc_linux_arm -c /home/frpc.ini &
 fi
 set -e
 
