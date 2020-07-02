@@ -25,3 +25,6 @@ function ARCHITECTURE()
         echo ""
     fi
 }
+
+
+set -e

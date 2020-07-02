@@ -1,5 +1,6 @@
 #!/bin/bash
-set -ex
+set -x
+set -e
 set -o pipefail
 
 ## 引入公共变量
@@ -14,6 +15,7 @@ set -o pipefail
 # @author : Cyril
 # @email  : wyy377244@163.com
 # @date	  : 2020/07/02 
+# @tips	  : 不支持配置root用户
 ########################################
 # @params : 
 #      $1 : user
@@ -24,9 +26,13 @@ echo "Start Configure .vimrc/.virc environment..."
 # path=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)  ## 真正的脚本绝对路径
 # user="pi"
 user=$1
+if [ $? -ne 0 ] || [ ! -d "/home/${user}" ];then
+	echo """Usage: ./$0 <user>. 
+The user must be exists in home dir."""
+	exit 1
+fi
 
 cd ${path}
-
 
 if [ -f "/home/${user}/.vimrc_bak" ];then
     ## 如果已存在备份文件则直接覆盖vimrc文件

@@ -15,6 +15,7 @@ set -o pipefail
 # @author : Cyril
 # @email  : wyy377244@163.com
 # @date	  : 2020/07/02 
+# @tips	  : 不支持配置root用户
 ########################################
 # @params : 
 #      $1 : user
@@ -25,7 +26,11 @@ echo "Start Configure .bashrc environment..."
 # path=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
 # user="pi"
 user=$1
-
+if [ $? -ne 0 ] || [ ! -d "/home/${user}" ];then
+	echo """Usage: ./$0 <user>. 
+	The user must be exists in home dir."""
+		    exit 1
+fi
 
 cd ${path}
 
