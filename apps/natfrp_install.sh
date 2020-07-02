@@ -2,13 +2,17 @@
 set -ex
 set -o pipefail
 
-## 引入公共变量
-. ../utils/variables.sh
 # >>>>>引入公共变量
 #   path   : 当前运行脚本绝对路径
+#   FRPC_DOMAIN : frpc 服务器域名
+#   FRPC_HOME   : frpc Home路径
+#   FRPC_ARM64
+#   FRPC_ARM32
+#   FRPC_SPATH
+#   ARCHITECTURE: 获取架构名
 # <<<<<
+. ../utils/variables.sh
 
-user=pi
 ########################################
 # 安装natfrp(树莓派专用32/64位)
 #--------------------------------------
@@ -16,31 +20,41 @@ user=pi
 # @email  : wyy377244@163.com
 # @date	  : 2020/07/02 
 ########################################
-# @params : 
-#      $1 : user
+# @params : None
 ########################################
 
 echo "Start Install NatFrp..."
 
-cd /home/${user}
+##指定安装路径
+INSTALL_PATH="/opt/natfrp"
+##指定配置文件路径
+CONF=${INSTALL_PATH}/frpc.ini
+FRPC_LOG=$(mktemp)
 
+if [ ! -d  "/opt/natfrp" ];then
+    sudo mkdir -p ${INSTALL_PATH}
+fi
+sudo chmod -R 777 ${INSTALL_PATH}
+
+## 下载frpc配置文件
 set +e
-ARCHITECTURE=""
-uname -a | grep "aarch64"
-if [ $? -eq 0 ];then
-    wget --timeout 120 --tries 2 -O frpc_linux_arm64  https://qianqu.me/frp/frpc_linux_arm64
-    ARCHITECTURE="aarch64"
-    sudo chmod 777 frpc_linux_arm64
-    nohup ./frpc_linux_arm64 -c /home/frpc.ini &
-fi
-uname -a | grep "armhf"
-if [ $? -eq 0 ];then
-    wget --timeout 120 --tries 2 -O frpc_linux_arm  https://qianqu.me/frp/frpc_linux_arm
-    ARCHITECTURE="armhf"
-    sudo chmod 777 frpc_linux_arm
-    nohup ./frpc_linux_arm -c /home/frpc.ini &
-fi
+cd ${INSTALL_PATH}
+python3 natfrp_helper.py downloadConfFromFrp ${CONF} ### 下载frpc.ini
 set -e
+
+
+## 下载frpc客户端
+case $(ARCHITECTURE) in
+    "armhf")
+    wget --timeout 120 --tries 2 -O ${FRPC_ARM32}  ${FRPC_SPATH}/${FRPC_ARM32}
+    ;;
+    "aarch64")
+    wget --timeout 120 --tries 2 -O ${FRPC_ARM64}  ${FRPC_SPATH}/${FRPC_ARM64}
+    ;;
+    *)
+    return 255    ##异常退出
+    ;;
+esac
 
 
 echo "NatFrp install complete and service is starting..."

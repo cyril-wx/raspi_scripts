@@ -182,7 +182,7 @@ def deleteProxiesById(id_names={}):
         time.sleep(1)
 
 
-def downloadConfFromFrp():
+def downloadConfFromFrp(conf="/tmp/frpc.ini"):
     """
     # 从frp服务器下载ini文件
     :return: ini path
@@ -207,21 +207,44 @@ def downloadConfFromFrp():
     }
 
     res = session.get(url, cookies=cookie, headers=headers)
+    try:
+        html = etree.HTML(res.text)  # 初始化生成一个XPath解析对象
+        # result = etree.tostring(html, encoding='utf-8')  # 解析对象输出代码
+        tbody = html.xpath("//html/body/div[1]/div[1]/div[2]/div/div/div[1]/div[2]/div[2]/pre/text()")  # 解析tbody-tr-td下元素，使用text()获取值
+        with open(conf, "w") as f:
+            f.write(tbody[0])
+        sys.exit(0)
+    except Exception as e:
+        print (e)
+        sys.exit(1)
 
-    html = etree.HTML(res.text)  # 初始化生成一个XPath解析对象
-    # result = etree.tostring(html, encoding='utf-8')  # 解析对象输出代码
-    tbody = html.xpath("//html/body/div[1]/div[1]/div[2]/div/div/div[1]/div[2]/div[2]/pre/text()")  # 解析tbody-tr-td下元素，使用text()获取值
-    with open("/home/frpc.ini", "w") as f:
-        f.write(tbody[0])
-    return "/home/frpc.ini"
 
-if __name__ == "__main__":
+## Python的入口开始
+def main():
+	module = sys.modules[__name__]
+	# getattr() 函数用于返回一个对象属性值。
+	# sys.argv 是获取运行python文件的时候命令行参数,且以list形式存储参数 
+	# sys.argv[0] 代表当前module的名字
+	try:
+		func = getattr(module, sys.argv[1])
+	except Exception as e:
+		print(e)
+	else:
+		args = None
+		if len(sys.argv) > 1:
+			args = sys.argv[2:]
+			#print("DEBUG: args = %s" %args)
+			func(*args)
 
-    #pIds = getProxyIds()
-    #deleteProxiesById(pIds)
-    #createProxies()
+main()
+
+'''  
+#f __name__ == "__main__":
+    pIds = getProxyIds()
+    deleteProxiesById(pIds)
+    createProxies()
     downloadConfFromFrp()
     pass
+'''
 
 
-#/html/body/div[1]/div[1]/div[2]/div/div/div[1]/div[2]/div[2]/pre
