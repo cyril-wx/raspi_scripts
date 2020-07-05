@@ -165,4 +165,7 @@ function main()
 }
 
 main ### 将脚本注入rc.local实现开机自启
+##supervisor_log="/tmp/run_my_supervisors.log"
+##nohup /home/pi/run_my_supervisors.sh ${supervisor_log} >  ${supervisor_log} 2>&1 &
+
 exit 1
