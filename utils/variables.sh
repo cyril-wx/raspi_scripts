@@ -5,6 +5,7 @@ set +e
 
 path=$(cd "$(dirname $0)" && pwd) ## 可供调用的path, 不能被source
 
+###@FPRC
 FRPC_DOMAIN="jp-tyo-dvm.sakurafrp.com"  ## frpc 服务器域名
 FRPC_SPATH="https://qianqu.me/frp/"
 FRPC_ARM64="frpc_linux_arm64"
@@ -14,6 +15,9 @@ FRPC_HOME="/opt/natfrp" ## frpc Home路径
 
 USER="pi" ## 当前用户
 
+###@Git
+GIT_USER="cyril"
+GIT_EMAIL="848873227@qq.com"
 
 ###@获取架构名
 function ARCHITECTURE()
