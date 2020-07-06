@@ -40,6 +40,13 @@ nohup /home/${USER}/run_my_supervisors.sh \${supervisor_log} &> \${supervisor_lo
 EOF
 }
 
+function hosts_config()
+{
+    ###Hosts配置
+    chmod u+x ../envs/hosts_config.sh
+    bash ../envs/hosts_config.sh
+}
+
 
 function main()
 {
@@ -47,6 +54,7 @@ function main()
     apps_install
     auto_startup
     env_config
+    hosts_config
     echo ">>>>debian_enviroment_config completed!"
 }
 
