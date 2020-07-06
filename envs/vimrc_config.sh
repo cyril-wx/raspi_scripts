@@ -26,7 +26,7 @@ echo "Start Configure .vimrc/.virc environment..."
 # path=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)  ## 真正的脚本绝对路径
 # user="pi"
 user=$1
-if [ $? -ne 0 ] || [ ! -d "/home/${user}" ];then
+if [[ x"${user}" == x"" ]] || [ ! -d "/home/${user}" ];then
 	echo """Usage: ./$0 <user>. 
 The user must be exists in home dir."""
 	exit 1
@@ -45,10 +45,12 @@ fi
 
 if [ -f "/home/${user}/.virc_bak" ];then
     ## 如果已存在备份文件则直接覆盖virc文件
-    \cp -f ./src/vimrc /home/${user}/.vimrc
+    \cp -f ./src/vimrc /home/${user}/.virc
 else
-    ## 如果不存在备份文件则先备份
-    mv /home/${user}/.virc /home/${user}/.virc_bak
+    if [ -f "/home/${user}/.virc" ];then
+        ## 如果不存在备份文件则先备份
+        mv /home/${user}/.virc /home/${user}/.virc_bak
+    fi
     \cp -f ./src/vimrc /home/${user}/.virc 
 fi
 

@@ -26,22 +26,23 @@ echo "Start Configure .bashrc environment..."
 # path=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
 # user="pi"
 user=$1
-if [ $? -ne 0 ] || [ ! -d "/home/${user}" ];then
+if [[ x"$user" == x"" ]] || [ ! -d "/home/${user}" ];then
 	echo """Usage: ./$0 <user>. 
 	The user must be exists in home dir."""
-		    exit 1
+        exit 1
 fi
 
 cd ${path}
-
-
+    
 if [ -f "/home/${user}/.bashrc_bak" ];then
     ## 如果已存在备份文件则直接覆盖vimrc文件
     \cp -f ./src/bashrc /home/${user}/.bashrc
 else
-    ## 如果不存在备份文件则先备份
-    mv /home/${user}/.vimrc /home/${user}/.vimrc_bak
-    \cp -f ./src/vimrc /home/${user}/.vimrc 
+    if [ -f "/home/${user}/.bashrc" ];then
+        ## 如果不存在备份文件则先备份
+        mv /home/${user}/.bashrc /home/${user}/.bashrc_bak
+    fi
+    \cp -f ./src/bashrc /home/${user}/.bashrc
 fi
 
 echo "bashrc configure completed!"

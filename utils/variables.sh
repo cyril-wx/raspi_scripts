@@ -3,7 +3,7 @@ set +e
 ## 脚本绝对路径, 不可被调用
 ## path=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd) ## 真正的脚本绝对路径
 
-path=$(cd "$(dirname "$0")" && pwd) ## 可供调用的path
+path=$(cd "$(dirname $0)" && pwd) ## 可供调用的path, 不能被source
 
 FRPC_DOMAIN="jp-tyo-dvm.sakurafrp.com"  ## frpc 服务器域名
 FRPC_SPATH="https://qianqu.me/frp/"
@@ -12,7 +12,7 @@ FRPC_ARM32="frpc_linux_arm"
 FRPC_HOME="/opt/natfrp" ## frpc Home路径
 
 
-USER="root" ## 当前用户
+USER="pi" ## 当前用户
 
 
 ###@获取架构名
@@ -40,7 +40,7 @@ function CHECK_SYS()
         OPTARG=$(echo $OPTARG | tr 'A-Z' 'a-z')
         ID=$(echo ${ID} | tr 'A-Z' 'a-z')
         if [[ x"$OPTARG" == x"${ID}" ]];then
-            let res+=$?
+            let res+=0
         else
             exit 1
         fi

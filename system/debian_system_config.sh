@@ -3,15 +3,14 @@ set -ex
 
 # >>>>>引入公共变量
 #   CHECK_SYS: -r -a -m
-#   USER:
 # <<<<<
 source ../utils/variables.sh
 
 ###检查系统版本
-CHECK_SYS -r debian
-CHECK_SYS -a 9
-CHECK_SYS -a 10
-
+#CHECK_SYS -r debian
+##CHECK_SYS -a 9
+##CHECK_SYS -a 10
+USER=pi
 
 function apps_install()
 {
@@ -27,8 +26,8 @@ function env_config()
     init_envs
     chmod u+x ../envs/bashrc_config.sh
     chmod u+x ../envs/vimrc_config.sh
-    bash ../envs/bashrc_config.sh
-    bash ../envs/vimrc_config.sh
+    bash ../envs/bashrc_config.sh pi
+    bash ../envs/vimrc_config.sh pi
 }
 
 function auto_startup()

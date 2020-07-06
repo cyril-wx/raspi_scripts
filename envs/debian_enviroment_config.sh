@@ -1,5 +1,5 @@
 #!/bin/bash
-#set +e
+set -e
 
 ##########################################
 ### 获取系统信息及初始化使用
@@ -62,6 +62,7 @@ EOF
     *)
     echo "Unknown system version: ${ID}${VERSION_ID}, current unsupported."
     ;;
+    esac
     echo ">>>>update_repo complete."
 }
 
@@ -70,44 +71,53 @@ function set_static_ip()
 {
     echo ">>>>set_static_ip for eth0"
     # 设置备份文件
-    if [ ! -f "/etc/sshd_config.bak" ];then
-        cp /etc/sshd_config /etc/sshd_config.bak
+    if [ ! -f "/etc/dhcpcd.conf.bak" ];then
+        cp /etc/dhcpcd.conf /etc/dhcpcd.conf.bak
     fi
-    sed -i '1i\"profile static_eth0"' /etc/dhcpcd.conf
-    sed -i '1i\"interface eth0"' /etc/dhcpcd.conf
-    sed -i '1i\"fallback static_eth0"' /etc/dhcpcd.conf
-    sed -i '1i\"static ip_address=192.168.1.102/24"' /etc/dhcpcd.conf
-    sed -i '1i\"static routers=192.168.1.1"' /etc/dhcpcd.conf
-    sed -i '1i\"static domain_name_servers=192.168.1.1"' /etc/dhcpcd.conf
-    echo ">>>>set_static_ip for eth0 complete."
+    set +e
+    grep -E "^(profile static_eth0)$" /etc/dhcpcd.conf
+    if [ $? -eq 0 ];then
+    	set -e
+        echo "${FUNCNAME} skipped"
+    else
+    	set -e
+        sed -i '1i\"profile static_eth0"' /etc/dhcpcd.conf
+        sed -i '1i\"interface eth0"' /etc/dhcpcd.conf
+        sed -i '1i\"fallback static_eth0"' /etc/dhcpcd.conf
+        sed -i '1i\"static ip_address=192.168.1.102/24"' /etc/dhcpcd.conf
+        sed -i '1i\"static routers=192.168.1.1"' /etc/dhcpcd.conf
+        sed -i '1i\"static domain_name_servers=192.168.1.1"' /etc/dhcpcd.conf
+        echo ">>>>set_static_ip for eth0 complete."
+    fi 
 }
 
 function set_sshd()
 {
+    set +e
     # 设置备份文件
     if [ ! -f "/etc/sshd_config.bak" ];then
-        cp /etc/sshd_config /etc/sshd_config.bak
+        cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
     fi
     # 允许RSA密钥登陆
-    cat /etc/sshd_config | grep -E "^(RSAAuthentication)"
+    cat /etc/ssh/sshd_config | grep -E "^(RSAAuthentication)"
     if [ $? -eq 0 ];then
-        sed -i 's/^(RSAAuthentication).*/"RSAAuthentication yes"/g'  /etc/sshd_config
+        sed -i 's/^(RSAAuthentication).*/"RSAAuthentication yes"/g'  /etc/ssh/sshd_config
     else
-        echo "RSAAuthentication yes" >> /etc/sshd_config
+        echo "RSAAuthentication yes" >> /etc/ssh/sshd_config
     fi
     # 禁止SSH空密码用户登陆
-    cat /etc/sshd_config | grep -E "^(PermitEmptyPasswords)"
+    cat /etc/ssh/sshd_config | grep -E "^(PermitEmptyPasswords)"
     if [ $? -eq 0 ];then
-        sed -i 's/^(PermitEmptyPasswords).*/"PermitEmptyPasswords no"/g'  /etc/sshd_config
+        sed -i 's/^(PermitEmptyPasswords).*/"PermitEmptyPasswords no"/g'  /etc/ssh/sshd_config
     else
-        echo "PermitEmptyPasswords no" >> /etc/sshd_config
+        echo "PermitEmptyPasswords no" >> /etc/ssh/sshd_config
     fi
     # 允许root用户远程登陆
-    cat /etc/sshd_config | grep -E "^(PermitRootLogin)"
+    cat /etc/ssh/sshd_config | grep -E "^(PermitRootLogin)"
     if [ $? -eq 0 ];then
-        sed -i 's/^(PermitRootLogin).*/"PermitRootLogin yes"/g'  /etc/sshd_config
+        sed -i 's/^(PermitRootLogin).*/"PermitRootLogin yes"/g'  /etc/ssh/sshd_config
     else
-        echo "PermitRootLogin yes" >> /etc/sshd_config
+        echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
     fi
 }
 
