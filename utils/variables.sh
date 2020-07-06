@@ -26,5 +26,53 @@ function ARCHITECTURE()
     fi
 }
 
+###@检查系统版本
+function CHECK_SYS()
+{
+    set -e
+    local res=0
+    . /etc/os-release   ## debian/centos/ubuntu 都有它
+    let res+=$?
+    while getopts ":r:a:m" opt
+    do
+    case $opt in
+        r) ## check Kernel version(centos/debian/)
+        OPTARG=$(echo $OPTARG | tr 'A-Z' 'a-z')
+        ID=$(echo ${ID} | tr 'A-Z' 'a-z')
+        if [[ x"$OPTARG" == x"${ID}" ]];then
+            let res+=$?
+        else
+            exit 1
+        fi
+        ;;
+        
+        a)  ## check Kernel version no.
+        OPTARG=$(echo $OPTARG | tr 'A-Z' 'a-z')
+        VERSION_ID=$(echo ${ID} | tr 'A-Z' 'a-z')
+        if [[ x"$OPTARG" == x"${VERSION_ID}" ]];then
+            let res+=$?
+        else
+            exit 1
+        fi
+        ;;
+        m) ## check ARCHITECTURE(armhf/aarch64)
+        OPTARG=$(echo $OPTARG | tr 'A-Z' 'a-z')
+        ARCH=$(ARCHITECTURE)
+        if [[ x"$OPTARG" == x"${ARCH}" ]];then
+            let res+=$?
+        else
+            exit 1
+        fi
+        ;;
+        ?)
+        echo "Unknow input"
+        exit 1
+        ;;
+    esac
+    done
+    echo "ok"
+}
+
+
 
 set -e

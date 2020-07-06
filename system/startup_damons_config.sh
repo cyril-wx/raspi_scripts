@@ -145,7 +145,7 @@ function start_frpc_daemon()
 
 
 ###@运行主函数
-function main()
+function startup_damons()
 {
     echo "START_TIME: $(date)" 
     # kill其它同名进程 
@@ -164,7 +164,7 @@ function main()
     echo "END_TIME: $(date)"
 }
 
-main ### 将脚本注入rc.local实现开机自启
+startup_damons ### 将脚本注入rc.local实现开机自启
 ##supervisor_log="/tmp/run_my_supervisors.log"
 ##nohup /home/pi/run_my_supervisors.sh ${supervisor_log} >  ${supervisor_log} 2>&1 &
 
